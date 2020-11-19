@@ -72,3 +72,24 @@ az policy state trigger-scan
 # Create a new resource group
 
 rg3=$(az group create -n "$resource_group-3" -l $location)
+
+# Create storage policy and storage account
+
+az policy definition create --name "ModifyPublicStorageAccountAccess" \
+  --display-name "Modify Public Storage Account Access" \
+  --description "Removes public access from storage accounts" \
+  --rules 'storage_policy_rule.json' \
+  --metadata category=Storage
+
+#Create a new storage account
+storage_account_name="${prefix}sa$id"
+
+az storage account create -n $storage_account_name -g $rg1 \
+  -l $location --sku Standard_LRS \
+  --allow-blob-public-access true
+
+# Now apply the policy to RG1 in the portal
+
+# Once applied you can force an evaluation
+
+az policy state trigger-scan -g $rg1

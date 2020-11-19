@@ -81,3 +81,29 @@ Start-AzPolicyComplianceScan
 $rg3 = New-AzResourceGroup -Name "$prefix-$id-3" -Location $location
 
 # Create storage policy and storage account
+
+$defParams = @{
+    Name = "ModifyPublicStorageAccountAccess"
+    DisplayName = "Modify Public Storage Account Access"
+    Description = "Removes public access from storage accounts"
+    Metadata = '{"category":"Storage"}'
+    Policy = "storage_policy_rule.json"
+}
+
+$definition = New-AzPolicyDefinition @defParams
+
+#Create a new storage account
+$saAccountParameters = @{
+    Name = "$($prefix)sa$id"
+    ResourceGroupName = $rg1.ResourceGroupName
+    Location = $location
+    SkuName = "Standard_LRS"
+    AllowBlobPublicAccess = $true
+}
+
+$storageAccount = New-AzStorageAccount @saAccountParameters
+
+# Now apply the policy to RG1 in the portal
+
+# Once applied you can force an evaluation
+Start-AzPolicyComplianceScan -ResourceGroupName $rg1.ResourceGroupName
