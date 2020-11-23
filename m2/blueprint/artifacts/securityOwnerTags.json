@@ -1,0 +1,18 @@
+{
+    "kind": "policyAssignment",
+    "type": "Microsoft.Blueprint/blueprints/artifacts",
+    "properties": {
+        "displayName": "Security owner tag",
+        "description": "Apply security owner tag to all resources in the security resource group",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/5ffd78d9-436d-4b41-a421-5baa819e3008",
+        "resourceGroup": "Security",
+        "parameters": {
+            "tagName": {
+                "value": "Security Owner"
+            },
+            "tagValue": {
+                "value": "[parameters('security_owner_tagValue')]"
+            }
+        }
+    }
+}
